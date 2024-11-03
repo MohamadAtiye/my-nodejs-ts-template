@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import routes from "./routes/routes";
 import cors from "cors";
 import helmet from "helmet";
-import { configDotenv } from "dotenv";
 import { DataSource } from "./services/services";
 
 const app = express();
@@ -14,34 +13,53 @@ app.use(
 );
 app.use(helmet());
 
-function loadSecrets() {
-  // TODO: add different logic to retrieve secrets from different sources in production
-
+// function to load secrets from a secret manager, like AWS Secrets Manager
+async function loadSecrets() {
   try {
-    const secrets = configDotenv();
-    if (secrets.error) {
-      console.error("Error loading .env file");
-    }
+    // replace with real logic to load secrets
+    const secrets = await Promise.resolve({
+      HTTP_PORT: "3000",
+      JWT_SECRET: "my_secret_key",
+      DB_USER: "",
+      DB_PASSWORD: "",
+      DB_HOST: "",
+      DB_PORT: "",
+      DB_DATABASE: "",
+    });
 
-    // use default values if not set
-    process.env.JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-here";
-    process.env.HTTP_PORT = process.env.HTTP_PORT || "3000";
+    // set the secrets as environment variables
+    Object.keys(secrets).forEach((key) => {
+      process.env[key] = secrets[key as keyof typeof secrets];
+    });
+
     console.log("secrets loaded");
-  } catch (error) {}
+  } catch (error) {
+    // handle failed to load secrets
+  }
 }
 
 function initializeApp() {
   const startTime = new Date();
+
+  console.log("current env is", process.env.NODE_ENV);
+
+  // check if need to load secrets
+  // local host will use the .env file
+  if (process.env.NODE_ENV !== "localhost") {
+    loadSecrets();
+  }
+
+  // initialize prisma DB based on env variables
+  DataSource.initPrisma();
+
+  // set up routes
   app.get("/", (req: Request, res: Response) => {
     res.send(`hello, started at ${startTime}`);
   });
 
-  loadSecrets();
-
-  DataSource.initPrisma();
-
   app.use("/api", routes);
 
+  // start the server
   const PORT = +process.env.HTTP_PORT!;
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
