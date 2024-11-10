@@ -132,9 +132,9 @@ export const post_refreshUser = async (req: Request, res: Response) => {
   }
 };
 
-export const post_changePassword = async (req: Request, res: Response) => {
+export const put_changePassword = async (req: Request, res: Response) => {
   try {
-    const body = req.body as authModels.post_changePassword_args;
+    const body = req.body as authModels.put_changePassword_args;
 
     // get user data
     const foundUser = await userServices.findUser(req.user?.id!);

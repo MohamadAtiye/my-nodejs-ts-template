@@ -1,5 +1,7 @@
 // src/middleware/validator.ts
 import { ObjectSchema } from "yup";
+import * as yup from "yup";
+
 import { Request, Response, NextFunction } from "express";
 import { handleRequestError } from "../controllers/controllers";
 
@@ -14,4 +16,11 @@ export function validateIncoming<T extends object>(
       handleRequestError(error, req, res);
     }
   };
+}
+
+// Helper function to enforce type compatibility
+export function createYupSchema<T extends Record<string, unknown>>(
+  schema: yup.ObjectSchema<T>
+): yup.ObjectSchema<T> {
+  return schema;
 }

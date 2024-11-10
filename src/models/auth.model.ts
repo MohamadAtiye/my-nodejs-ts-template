@@ -36,11 +36,11 @@ export type post_refresh_response = {
   auth: UserAuth;
 };
 
-//////////////////////////////////////////-- post_changePassword
-export type post_changePassword_args = {
+//////////////////////////////////////////-- put_changePassword
+export type put_changePassword_args = {
   currentPassword: string;
   newPassword: string;
   confirmNewPassword: string;
 };
 
-export type post_changePassword_response = {};
+export type put_changePassword_response = {};

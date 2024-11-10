@@ -2,7 +2,7 @@
 import express from "express";
 import * as authController from "../controllers/auth.controller";
 import * as authValidator from "../middleware/auth.validator";
-import { validateIncoming } from "../middleware/validator";
+import { validateIncoming } from "../middleware/middleware";
 import { authenticate } from "../middleware/authenticators";
 
 const router = express.Router();
@@ -23,7 +23,7 @@ router.put(
   "/changePassword",
   authenticate,
   validateIncoming(authValidator.put_changePassword),
-  authController.post_changePassword
+  authController.put_changePassword
 );
 
 export default router;
