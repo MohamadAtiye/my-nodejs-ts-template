@@ -8,7 +8,7 @@ This is a basic template for a Node.js + TypeScript + Express + Yup validation +
 
 + Node.js and npm installed.
 
-+ Docker (optional if needed for docker MySql server).
++ Docker (optional if needed).
 
 ### Setup:
 
