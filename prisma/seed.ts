@@ -1,4 +1,6 @@
-import { DataSource } from "./services/services";
+// prisma/seed.ts
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 const USER_TYPES = [
   {
@@ -24,7 +26,7 @@ const ADMIN_USER = {
 function addUserTypes() {
   return Promise.all(
     USER_TYPES.map((u) =>
-      DataSource.client.userType.upsert({
+      prisma.userType.upsert({
         where: { id: u.id },
         create: { ...u },
         update: { ...u },
@@ -34,17 +36,24 @@ function addUserTypes() {
 }
 
 function addUser() {
-  return DataSource.client.user.upsert({
+  return prisma.user.upsert({
     where: { id: ADMIN_USER.id },
     create: { ...ADMIN_USER },
     update: { ...ADMIN_USER },
   });
 }
 
-async function seed() {
-  DataSource.initPrisma();
+async function main() {
   await addUserTypes();
   await addUser();
 }
 
-seed();
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });

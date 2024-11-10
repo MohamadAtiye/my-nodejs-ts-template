@@ -39,3 +39,7 @@ model user {
 
   userType userType @relation(fields: [userTypeId], references: [id])
 }
+
+model test {
+  id Int @id @default(autoincrement())
+}
