@@ -6,9 +6,9 @@ This is a basic template for a Node.js + TypeScript + Express + Yup validation +
 
 ### Prerequisites
 
-Node.js and npm installed.
++ Node.js and npm installed.
 
-Docker (optional if needed for docker MySql server).
++ Docker (optional if needed for docker MySql server).
 
 ### Setup:
 
