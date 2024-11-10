@@ -1,28 +1,93 @@
 # my-nodejs-ts-template
 
-This is a basic template for a Node.js + TypeScript + Express + Prisma + MySQL project. It includes a simple authentication system, a user management system, and a database seeder. The project is designed to be easily customizable and extended.
+This is a basic template for a Node.js + TypeScript + Express + Yup validation + Prisma + MySQL project. It includes a simple authentication system, a user management system, and a database seeder. The project is designed to be easily customizable and extended.
 
 ## Getting Started
 
-### Installation using mysql db
+### Prerequisites
+
+Node.js and npm installed.
+
+Docker (optional if needed for docker MySql server).
+
+### Setup:
 
 1. Clone the repository
-2. Run `npm install` to install the dependencies
-3. Create and populate a `.env` file with same format as `.env_bak`
-4. Run `npx prisma migrate dev --name init` to create the database tables. this will create a `prisma/migrations` folder with the migration files
-5. Run `npm run seedAdmin` to seed the database with an admin user
-6. Run `npm run dev` to start the server
-7. use default admin user `admin@mail.com` and password `password1`
-8. login route: `localhost:3000/api/auth/login`
+```
+git clone https://github.com/MohamadAtiye/my-nodejs-ts-template.git
+cd my-nodejs-ts-template
+```
 
-### for using Docker mysql db
+2. Install dependencies:
+```
+npm install
+```
 
-1. Clone the repository
-2. run `docker-compose up -d` to start the mysql db
-3. Run `npm install` to install the dependencies
-4. copy contents of `.env_bak` to a new file `.env`
-5. Run `npx prisma migrate dev --name init` to create the database tables. this will create a `prisma/migrations` folder with the migration files
-6. Run `npm run seedAdmin` to seed the database with an admin user
-7. Run `npm run dev` to start the server
-8. use default admin user `admin@mail.com` and password `password1`
-9. login route: `localhost:3000/api/auth/login`
+3. Configure environment variables:
+   
+    + Create a .env file based on .env_bak and populate it with the required values. (use default if running docker Db)
+
+5. Set up the database:
+
+    + Option A (recommended): Run MySQL in Docker
+      
+      ```
+      npm run dockerDb
+      ```
+
+    + Option B: Use an existing MySQL server by updating .env with your database details.
+
+6. Initialize the database:
+
+    + This command will:
+      + Synchronize the database with the Prisma schema.
+      + Generate migration SQL scripts.
+      + Generate TypeScript types from the schema.
+      + Seed initial data from prisma/seed.ts.
+   
+```
+npm run reset
+```
+
+6. Run the server:
+   
+    - The server will be available at http://localhost:3000.
+```
+npm run dev
+```
+
+
+### Default Login Credentials
+
++ Email: admin@mail.com
++ Password: password1
+  
+Authentication Route: POST http://localhost:3000/api/auth/login
+
+## Database Management
+
+### Seeding the Database
+To seed the database manually or reset seed data from prisma/seed.ts, run:
+```
+npm run seed
+```
+
+### Updating the Database Structure
+
+1. Update the database schema in `prisma/schema.prisma`.
+
+2. Apply the schema changes and create a new migration:
+```
+npx prisma migrate dev --name <name>
+```
+
+### Resetting the Database
+To completely reset the database schema, including migrations:
+
+1. Delete all tables from your database manually.
+2. Delete the prisma/migrations folder to remove previous migrations.
+3. Re-run the full initialization:
+```
+npm run reset
+```
+this will re-create all DB tables, create a new migration file with all .sql queries to create the tables, and will run the seed script
