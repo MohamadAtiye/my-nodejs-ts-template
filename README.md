@@ -51,10 +51,16 @@ npm run reset
 
 6. Run the server:
    
+
+    + Option A locally in terminal
+   ```
+   npm run dev
+   ```
+    + Option B in docker container
+   ```
+   npm run dockerApp
+   ```
     - The server will be available at http://localhost:3000.
-```
-npm run dev
-```
 
 
 ### Default Login Credentials
