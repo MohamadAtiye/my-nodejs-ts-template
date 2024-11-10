@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  template_app:
+    container_name: template_app
+    build:
+      context: .
+      dockerfile: Dockerfile_dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app # Bind mount current directory to /app in container
+      - /app/node_modules # Cache node_modules to avoid reinstalling dependencies
+    command: npm run dev

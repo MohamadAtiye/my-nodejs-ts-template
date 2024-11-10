@@ -9,7 +9,8 @@
     "dev": "ts-node-dev --poll --respawn --transpile-only src/index.ts",
     "seed": "ts-node prisma/seed.ts",
     "reset": "npx prisma migrate dev --name init && npx prisma migrate reset --force",
-    "dockerDb": "cd dockerDb && docker-compose up -d"
+    "dockerDb": "cd dockerDb && docker-compose up -d",
+    "dockerApp":"docker-compose up"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

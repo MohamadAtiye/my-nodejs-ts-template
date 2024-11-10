@@ -1,0 +1,23 @@
+# Use a base image with Node.js
+FROM node:20
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the application files
+COPY . .
+
+# Install all dependencies, including dev dependencies for local environment
+RUN npm install
+
+# Install ts-node-dev globally to enable auto-reloading for TypeScript
+RUN npm install -g ts-node-dev
+
+# Generate Prisma Client
+RUN npx prisma generate
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Set the command to start your app with ts-node-dev for hot reload
+CMD ["npm", "run", "dev"]
