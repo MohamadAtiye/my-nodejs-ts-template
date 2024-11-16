@@ -5,6 +5,14 @@ export const findUserByUsername = async (username: string) => {
     where: {
       username,
     },
+    include: {
+      userOrganization: {
+        include: {
+          organization: true,
+          userRole: true,
+        },
+      },
+    },
   });
 };
 
@@ -12,6 +20,14 @@ export const findUser = async (userId: string) => {
   return DataSource.client.user.findUnique({
     where: {
       id: userId,
+    },
+    include: {
+      userOrganization: {
+        include: {
+          organization: true,
+          userRole: true,
+        },
+      },
     },
   });
 };

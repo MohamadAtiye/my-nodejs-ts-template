@@ -1,9 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { ApiError, handleRequestError } from "../controllers/controllers";
-import { verifyToken } from "../utils/jwt.utils";
+import { TokenPayload, verifyToken } from "../utils/jwt.utils";
 
-export const isAdmin = (user: any) => {
-  return user.userTypeId === 1;
+export const isAdmin = (user: TokenPayload) => {
+  return user.isGlobalAdmin;
+};
+
+export const isOrgAdmin = (user: TokenPayload, orgId: number) => {
+  return user.orgs.some((org) => org.id === orgId && org.roleId === 1);
+};
+
+export const isOrgMember = (user: TokenPayload, orgId: number) => {
+  return user.orgs.some((org) => org.id === orgId);
 };
 
 export function authenticate(req: Request, res: Response, next: NextFunction) {
@@ -15,7 +23,13 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
     }
 
     try {
-      req.user = verifyToken(token); // Attach user data to the request object
+      // read token contents
+      const user = verifyToken(token);
+      // check contents of token
+      if (!user.id || !user.username || !user.orgs.length)
+        throw new ApiError(401, "invalidToken", "Invalid token");
+      // attach user data to the request object
+      req.user = user;
     } catch (error) {
       throw new ApiError(401, "invalidToken", "Invalid token");
     }
@@ -40,7 +54,13 @@ export function authenticateAdmin(
     }
 
     try {
-      req.user = verifyToken(token); // Attach user data to the request object
+      // read token contents
+      const user = verifyToken(token);
+      // check contents of token
+      if (!user.id || !user.username || !user.orgs.length)
+        throw new ApiError(401, "invalidToken", "Invalid token");
+      // attach user data to the request object
+      req.user = user;
     } catch (error) {
       throw new ApiError(401, "invalidToken", "Invalid token");
     }

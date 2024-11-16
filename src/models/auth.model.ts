@@ -1,14 +1,15 @@
 // models/user.model.ts
 
-export type UserProfile = {
-  id: string;
-  username: string;
-  isPhone: boolean;
-  fName: string;
-  lName: string;
-  profilePicUrl: string;
-  passwordExpireDate: Date | null;
-  shouldChangePassword: boolean;
+import { user } from "@prisma/client";
+
+export type UserProfile = Omit<user, "password"> & {
+  orgs: {
+    id: number;
+    name: string;
+    description: string;
+    roleId: number;
+    roleLabel: string;
+  }[];
 };
 
 export type UserAuth = {

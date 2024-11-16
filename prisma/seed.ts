@@ -1,8 +1,16 @@
 // prisma/seed.ts
-import { PrismaClient } from "@prisma/client";
+import {
+  organization,
+  PrismaClient,
+  user,
+  userOrganization,
+  userRole,
+} from "@prisma/client";
 const prisma = new PrismaClient();
 
-const USER_TYPES = [
+type meta = "isDeleted" | "createdTs" | "updatedTs";
+
+const USER_ROLES: Omit<userRole, meta>[] = [
   {
     id: 1,
     label: "Admin",
@@ -13,20 +21,36 @@ const USER_TYPES = [
   },
 ];
 
-const ADMIN_USER = {
+const ORGANIZATION: Omit<organization, meta> = {
+  id: 1,
+  name: "Organization",
+  description: "Organization description",
+};
+
+const ADMIN_USER: Omit<user, meta> = {
   id: "92da2876-be63-45eb-8c07-4d4a773037a8",
   username: "admin@mail.com",
   password: "$2a$10$Yvc.jWLQ088.HoE1aOA9QuuYNEF7mY/ju9E1oyw8g8tYcMYooERge", //"password1"
   isPhone: false,
   fName: "fNameAdmin",
   lName: "lNameAdmin",
-  userTypeId: 1,
+  profilePicUrl: "",
+  isGlobalAdmin: true,
+  passwordExpireDate: null,
+  shouldChangePassword: false,
+};
+
+const USER_ORGANIZATION: Omit<userOrganization, meta> = {
+  id: 1,
+  userId: ADMIN_USER.id,
+  organizationId: ORGANIZATION.id,
+  userRoleId: USER_ROLES[0].id,
 };
 
 function addUserTypes() {
   return Promise.all(
-    USER_TYPES.map((u) =>
-      prisma.userType.upsert({
+    USER_ROLES.map((u) =>
+      prisma.userRole.upsert({
         where: { id: u.id },
         create: { ...u },
         update: { ...u },
@@ -43,9 +67,27 @@ function addUser() {
   });
 }
 
+function addOrganization() {
+  return prisma.organization.upsert({
+    where: { id: ORGANIZATION.id },
+    create: { ...ORGANIZATION },
+    update: { ...ORGANIZATION },
+  });
+}
+
+function addUserOrganization() {
+  return prisma.userOrganization.upsert({
+    where: { id: USER_ORGANIZATION.id },
+    create: { ...USER_ORGANIZATION },
+    update: { ...USER_ORGANIZATION },
+  });
+}
+
 async function main() {
   await addUserTypes();
   await addUser();
+  await addOrganization();
+  await addUserOrganization();
 }
 
 main()

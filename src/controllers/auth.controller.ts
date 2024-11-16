@@ -46,6 +46,17 @@ export const post_loginUser = async (req: Request, res: Response) => {
       profilePicUrl: foundUser.profilePicUrl,
       passwordExpireDate: foundUser.passwordExpireDate,
       shouldChangePassword: foundUser.shouldChangePassword,
+      isGlobalAdmin: foundUser.isGlobalAdmin,
+      isDeleted: foundUser.isDeleted,
+      createdTs: foundUser.createdTs,
+      updatedTs: foundUser.updatedTs,
+      orgs: foundUser.userOrganization.map((uo) => ({
+        id: uo.organizationId,
+        name: uo.organization.name,
+        description: uo.organization.description,
+        roleId: uo.roleId,
+        roleLabel: uo.userRole.label,
+      })),
     };
 
     // generate tokens
@@ -53,12 +64,20 @@ export const post_loginUser = async (req: Request, res: Response) => {
       accessToken: generateToken({
         id: profile.id,
         username: profile.username,
-        userTypeId: foundUser.userTypeId,
+        isGlobalAdmin: foundUser.isGlobalAdmin,
+        orgs: foundUser.userOrganization.map((uo) => ({
+          id: uo.organizationId,
+          roleId: uo.roleId,
+        })),
       }),
       refreshToken: generateRefreshToken({
         id: profile.id,
         username: profile.username,
-        userTypeId: foundUser.userTypeId,
+        isGlobalAdmin: foundUser.isGlobalAdmin,
+        orgs: foundUser.userOrganization.map((uo) => ({
+          id: uo.organizationId,
+          roleId: uo.roleId,
+        })),
       }),
     };
 
@@ -108,6 +127,17 @@ export const post_refreshUser = async (req: Request, res: Response) => {
       profilePicUrl: foundUser.profilePicUrl,
       passwordExpireDate: foundUser.passwordExpireDate,
       shouldChangePassword: foundUser.shouldChangePassword,
+      isGlobalAdmin: foundUser.isGlobalAdmin,
+      isDeleted: foundUser.isDeleted,
+      createdTs: foundUser.createdTs,
+      updatedTs: foundUser.updatedTs,
+      orgs: foundUser.userOrganization.map((uo) => ({
+        id: uo.organizationId,
+        name: uo.organization.name,
+        description: uo.organization.description,
+        roleId: uo.roleId,
+        roleLabel: uo.userRole.label,
+      })),
     };
 
     // generate tokens
@@ -115,12 +145,20 @@ export const post_refreshUser = async (req: Request, res: Response) => {
       accessToken: generateToken({
         id: profile.id,
         username: profile.username,
-        userTypeId: foundUser.userTypeId,
+        isGlobalAdmin: foundUser.isGlobalAdmin,
+        orgs: foundUser.userOrganization.map((uo) => ({
+          id: uo.organizationId,
+          roleId: uo.roleId,
+        })),
       }),
       refreshToken: generateRefreshToken({
         id: profile.id,
         username: profile.username,
-        userTypeId: foundUser.userTypeId,
+        isGlobalAdmin: foundUser.isGlobalAdmin,
+        orgs: foundUser.userOrganization.map((uo) => ({
+          id: uo.organizationId,
+          roleId: uo.roleId,
+        })),
       }),
     };
 

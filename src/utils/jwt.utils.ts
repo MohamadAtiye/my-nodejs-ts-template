@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 export interface TokenPayload {
   id: string;
   username: string;
-  userTypeId: number;
+  isGlobalAdmin: boolean;
+  orgs: { id: number; roleId: number }[];
 }
 
 // Generate an Access token

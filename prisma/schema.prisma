@@ -9,15 +9,22 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model userType {
-  id   Int    @id @default(autoincrement())
+model userRole {
+  id    Int    @id @default(autoincrement())
   label String @unique
-  User user[]
+
+  // meta
+  isDeleted Boolean  @default(false)
+  createdTs DateTime @default(now())
+  updatedTs DateTime @default(now()) @updatedAt
+
+  // relations
+  userOrganization userOrganization[]
 }
 
 model user {
@@ -31,15 +38,44 @@ model user {
   passwordExpireDate   DateTime?
   shouldChangePassword Boolean   @default(false)
 
-  userTypeId Int
+  isGlobalAdmin Boolean
 
+  // meta
   isDeleted Boolean  @default(false)
   createdTs DateTime @default(now())
   updatedTs DateTime @default(now()) @updatedAt
 
-  userType userType @relation(fields: [userTypeId], references: [id])
+  // relations
+  userOrganization userOrganization[]
 }
 
-model test {
-  id Int @id @default(autoincrement())
+model organization {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+
+  // meta
+  isDeleted Boolean  @default(false)
+  createdTs DateTime @default(now())
+  updatedTs DateTime @default(now()) @updatedAt
+
+  // relations
+  userOrganization userOrganization[]
+}
+
+model userOrganization {
+  id             Int    @id @default(autoincrement())
+  userId         String
+  organizationId Int
+  roleId         Int
+
+  // meta
+  isDeleted Boolean  @default(false)
+  createdTs DateTime @default(now())
+  updatedTs DateTime @default(now()) @updatedAt
+
+  // relations
+  user         user         @relation(fields: [userId], references: [id])
+  organization organization @relation(fields: [organizationId], references: [id])
+  userRole     userRole     @relation(fields: [roleId], references: [id])
 }
